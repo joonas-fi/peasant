@@ -1,0 +1,1 @@
+ocra --output bin\peasant-rb.exe Peasant.rb
