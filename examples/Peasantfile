@@ -1,0 +1,10 @@
+{
+	"repositories": [
+		{
+			"path": "chef_cookbooks/apache2",
+			"revision": "e340cefcd4265a81c7c3b09d762fad166cff318e",
+			"url": "git://github.com/opscode-cookbooks/apache2.git",
+			"type": "git"
+		}
+	]
+}
