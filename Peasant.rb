@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 require 'json'
 require 'fileutils'
+require 'open-uri'
 
 peasantfileFilename = 'Peasantfile'
 
@@ -81,6 +82,39 @@ class Peasant
 		is_windows = (ENV['OS'] == 'Windows_NT')
 
 		commandStream = is_windows ? WindowsCommandStream.new : UnixCommandStream.new
+
+		unless peasantfile['download']
+			peasantfile['download'] = []
+		end
+
+		unless peasantfile['repositories']
+			peasantfile['repositories'] = []
+		end
+
+		peasantfile['download'].each do |download|
+			unless File.exist? download['to']
+				dirname = File.dirname download['to']
+
+				if dirname
+					unless File.exist? dirname
+						FileUtils.mkdir_p dirname
+					end
+				end
+
+				puts 'Downloading ' + download['url']
+
+				tempname = download['to'] + '.temp_download'
+
+				File.open(tempname, 'wb') do |saved_file|
+					# the following "open" is provided by open-uri
+					open(download['url'], 'rb') do |read_file|
+						saved_file.write(read_file.read)
+					end
+				end
+
+				File.rename tempname, download['to']
+			end
+		end
 
 		peasantfile['repositories'].each do |repository|
 			vcDriverType = repository['type']
